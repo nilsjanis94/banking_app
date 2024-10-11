@@ -1,6 +1,4 @@
-import login_window
-import tkinter as tk
-
+from login_window import *
 
 def main():
     root = tk.Tk()
