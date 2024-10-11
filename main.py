@@ -6,8 +6,6 @@ def main():
 
     # Example of adding a user 
     #app.add_user('admin', 'password')
-
-
     root.mainloop()
 
 main()

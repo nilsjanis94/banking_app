@@ -72,12 +72,3 @@ class LoginApplication:
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
         self.cursor.execute('INSERT INTO users (username, password) VALUES (%s, %s)', (username, hashed_password))
         self.conn.commit()
-
-root = tk.Tk()
-app = LoginApplication(root)
-
-# Example of adding a user 
-#app.add_user('admin', 'password')
-
-
-root.mainloop()
