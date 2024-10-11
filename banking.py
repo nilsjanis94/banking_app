@@ -3,6 +3,7 @@ from tkinter import ttk
 from tkinter import messagebox
 import bcrypt
 import mysql.connector
+import config  
 
 class LoginApplication:
     def __init__(self, root):
@@ -32,10 +33,10 @@ class LoginApplication:
 
     def init_db(self):
         self.conn = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="password",
-            database="banking"
+            host=config.MYSQL_HOST,
+            user=config.MYSQL_USER,
+            password=config.MYSQL_PASSWORD,
+            database=config.MYSQL_DATABASE
         )
         self.cursor = self.conn.cursor()
         self.cursor.execute('''
@@ -75,7 +76,8 @@ class LoginApplication:
 root = tk.Tk()
 app = LoginApplication(root)
 
-# Add a user to the database
+# Example of adding a user 
 #app.add_user('admin', 'password')
+
 
 root.mainloop()
