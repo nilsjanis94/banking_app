@@ -3,7 +3,7 @@ from tkinter import ttk
 from tkinter import messagebox
 import bcrypt
 import mysql.connector
-import config  
+import config  # Import the configuration file
 
 class LoginApplication:
     def __init__(self, root):
@@ -25,8 +25,12 @@ class LoginApplication:
         self.login_button = ttk.Button(self.frm, text="Login", command=self.check_credentials)
         self.login_button.grid(column=1, row=2)
 
+        # Create add user button
+        self.add_user_button = ttk.Button(self.frm, text="Add User", command=self.open_add_user_window)
+        self.add_user_button.grid(column=1, row=3)
+
         # Create quit button
-        ttk.Button(self.frm, text="Quit", command=self.root.destroy).grid(column=1, row=3)
+        ttk.Button(self.frm, text="Quit", command=self.root.destroy).grid(column=1, row=4)
 
         # Initialize database
         self.init_db()
@@ -69,6 +73,37 @@ class LoginApplication:
         return result[0] if result else None
 
     def add_user(self, username, password):
+        # Check if the user already exists
+        self.cursor.execute('SELECT username FROM users WHERE username = %s', (username,))
+        if self.cursor.fetchone():
+            messagebox.showerror("Error", f"User {username} already exists.")
+            return
+
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
         self.cursor.execute('INSERT INTO users (username, password) VALUES (%s, %s)', (username, hashed_password))
         self.conn.commit()
+        messagebox.showinfo("Success", f"User {username} added successfully.")
+
+    def open_add_user_window(self):
+        add_user_window = tk.Toplevel(self.root)
+        add_user_window.title("Add New User")
+
+        ttk.Label(add_user_window, text="New Username:").grid(column=0, row=0)
+        new_username_entry = ttk.Entry(add_user_window, width=20)
+        new_username_entry.grid(column=1, row=0)
+
+        ttk.Label(add_user_window, text="New Password:").grid(column=0, row=1)
+        new_password_entry = ttk.Entry(add_user_window, width=20, show="*")
+        new_password_entry.grid(column=1, row=1)
+
+        def add_new_user():
+            new_username = new_username_entry.get()
+            new_password = new_password_entry.get()
+            if not new_username or not new_password:
+                messagebox.showerror("Error", "Username and Password cannot be empty")
+                return
+            self.add_user(new_username, new_password)
+            add_user_window.destroy()
+
+        ttk.Button(add_user_window, text="Add User", command=add_new_user).grid(column=1, row=2)
+        
