@@ -75,7 +75,7 @@ class LoginApplication:
 root = tk.Tk()
 app = LoginApplication(root)
 
-# Example of adding a user (this should be done through a registration process in a real application)
+# Add a user to the database
 #app.add_user('admin', 'password')
 
 root.mainloop()
